@@ -1,0 +1,69 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="static/todo/custom.css">
+    <title>Todo App</title>
+</head>
+<body>
+    <div class="main container shadow-lg ">
+        
+        <h1><strong>TODO APP</strong></h1>
+               
+        <div class="container px-4 sub">
+            <h2>Add your new todo</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{form.title}}
+                {{form.info}}
+                
+                <button type="submit" class="btn btn-primary mg shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="20" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+        <div class="container sub"> 
+            
+            {% if task_list %}
+                <h3>{{title}}</h3>
+                
+                {% for task in task_list %}
+
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center mg shadow-lg df">
+                            {{task}} <br>
+                            {{task.info}} <br>
+                                - {{task.date}}
+                            <span>
+                                <br>
+                                <form action="/delete/{{task.id}}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger mg shadow-lg" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </span>
+                        </li>       
+                    </ul>              
+                {% endfor %}
+                
+                <h5>You have {{total_tasks}} pending tasks.</h5>
+                <form action="/clear_all/" method="POST">
+                    {% csrf_token %}
+                    {{total}}
+                    <button type="submit" class="btn btn-info mg shadow-lg">Clear All</button>
+                </form>
+            {% endif %}
+        </div>
+        
+    </div>
+</body>
+</html>
